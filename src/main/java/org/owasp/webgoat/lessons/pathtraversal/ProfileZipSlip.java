@@ -1,4 +1,4 @@
-.package org.owasp.webgoat.lessons.pathtraversal;
+package org.owasp.webgoat.lessons.pathtraversal;
 
 import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
