@@ -19,7 +19,6 @@
  *
  * Source for this application is maintained at https://github.com/WebGoat/WebGoat, a repository for free software projects.
  */
-
 package org.owasp.webgoat.lessons.idor;
 
 import java.util.HashMap;
@@ -37,18 +36,21 @@ import org.springframework.web.bind.annotation.RestController;
 @AssignmentHints({"idor.hints.idor_login"})
 public class IDORLogin extends AssignmentEndpoint {
 
+  private static final String PASSWORD_KEY = "password";
   private Map<String, Map<String, String>> idorUserInfo = new HashMap<>();
 
   public void initIDORInfo() {
+    String tomPassword = System.getenv("TOM_PASSWORD");
+    String billPassword = System.getenv("BILL_PASSWORD");
 
     idorUserInfo.put("tom", new HashMap<String, String>());
-    idorUserInfo.get("tom").put("password", "cat");
+    idorUserInfo.get("tom").put(PASSWORD_KEY, tomPassword);
     idorUserInfo.get("tom").put("id", "2342384");
     idorUserInfo.get("tom").put("color", "yellow");
     idorUserInfo.get("tom").put("size", "small");
 
     idorUserInfo.put("bill", new HashMap<String, String>());
-    idorUserInfo.get("bill").put("password", "buffalo");
+    idorUserInfo.get("bill").put(PASSWORD_KEY, billPassword);
     idorUserInfo.get("bill").put("id", "2342388");
     idorUserInfo.get("bill").put("color", "brown");
     idorUserInfo.get("bill").put("size", "large");
@@ -59,9 +61,8 @@ public class IDORLogin extends AssignmentEndpoint {
   public AttackResult completed(@RequestParam String username, @RequestParam String password) {
     initIDORInfo();
     UserSessionData userSessionData = getUserSessionData();
-
     if (idorUserInfo.containsKey(username)) {
-      if ("tom".equals(username) && idorUserInfo.get("tom").get("password").equals(password)) {
+      if ("tom".equals(username) && idorUserInfo.get("tom").get(PASSWORD_KEY).equals(password)) {
         userSessionData.setValue("idor-authenticated-as", username);
         userSessionData.setValue(
             "idor-authenticated-user-id", idorUserInfo.get(username).get("id"));
