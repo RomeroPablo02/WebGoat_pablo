@@ -48,7 +48,8 @@ public class IDORLogin extends AssignmentEndpoint {
     idorUserInfo.get("tom").put("size", "small");
 
     idorUserInfo.put("bill", new HashMap<String, String>());
-    idorUserInfo.get("bill").put("password", "buffalo");
+    String password = System.getenv("BILL_PASSWORD"); 
+    idorUserInfo.get("bill").put("password", password);
     idorUserInfo.get("bill").put("id", "2342388");
     idorUserInfo.get("bill").put("color", "brown");
     idorUserInfo.get("bill").put("size", "large");
