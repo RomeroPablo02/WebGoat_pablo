@@ -1,4 +1,4 @@
-package org.owasp.webgoat.lessons.pathtraversal;
+.package org.owasp.webgoat.lessons.pathtraversal;
 
 import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -70,9 +70,18 @@ public class ProfileZipSlip extends ProfileUploadBase {
       Enumeration<? extends ZipEntry> entries = zip.entries();
       while (entries.hasMoreElements()) {
         ZipEntry e = entries.nextElement();
+
+          // Validacion de la ruta del zip
         File f = new File(tmpZipDirectory.toFile(), e.getName());
-        InputStream is = zip.getInputStream(e);
-        Files.copy(is, f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        String canonicalDestPath = tmpZipDirectory.toFile().getCanonicalPath();
+        String canonicalFilePath = f.getCanonicalPath();
+        
+        if (!canonicalFilePath.startsWith(canonicalDestPath + File.separator)) {
+            throw new SecurityException("Zip Slip detectado: " + e.getName());
+}
+
+// Si pasa la validación, entonces extraemos
+Files.copy(is, f.toPath(), StandardCopyOption.REPLACE_EXISTING);
       }
 
       return isSolved(currentImage, getProfilePictureAsBase64());
